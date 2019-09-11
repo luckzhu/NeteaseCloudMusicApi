@@ -73,14 +73,15 @@ const createRequest = (method, url, data, options) => {
         "osver": cookie.osver, //系统版本
         "deviceId": cookie.deviceId, //encrypt.base64.encode(imei + '\t02:00:00:00:00:00\t5106025eb79a5247\t70ffbaac7')
         "appver": cookie.appver || "6.1.1", // app版本
-        "versioncode":  cookie.versioncode || "140", //版本号
+        "versioncode": cookie.versioncode || "140", //版本号
         "mobilename": cookie.mobilename, //设备model
         "buildver": cookie.buildver || Date.now().toString().substr(0, 10),
         "resolution": cookie.resolution || "1920x1080", //设备分辨率
         "__csrf": csrfToken,
         "os": cookie.os || 'android',
         "channel": cookie.channel,
-        "requestId":`${Date.now()}_${Math.floor(Math.random() * 1000).toString().padStart(4, '0')}`
+        "requestId": `${Date.now()}_${Math.floor(Math.random() * 1000).toString().padStart(4, '0')}`,
+        "X- Real - IP": '211.161.244.70'
       }
       if (cookie.MUSIC_U) header["MUSIC_U"] = cookie.MUSIC_U
       if (cookie.MUSIC_A) header["MUSIC_A"] = cookie.MUSIC_A
@@ -94,7 +95,7 @@ const createRequest = (method, url, data, options) => {
         .join('; ')
       data.header = header
       data = encrypt.eapi(options.url, data)
-      url = url.replace(/\w*api/,'eapi')
+      url = url.replace(/\w*api/, 'eapi')
     }
 
     const answer = { status: 500, body: {}, cookie: [] }
@@ -130,10 +131,10 @@ const createRequest = (method, url, data, options) => {
               zlib.unzip(body, function (err, buffer) {
                 const _buffer = err ? body : buffer
                 try {
-                  try{
+                  try {
                     answer.body = JSON.parse(encrypt.decrypt(_buffer).toString())
                     answer.status = answer.body.code || res.statusCode
-                  } catch(e){
+                  } catch (e) {
                     answer.body = JSON.parse(_buffer.toString())
                     answer.status = res.statusCode
                   }
